@@ -2,7 +2,7 @@ services:
   - name: splittify-backend
     type: web
     env: node
-    plan: free  # Puoi cambiare il piano se necessario
+    plan: free  # Cambia il piano se necessario
     buildCommand: |
       cd backend && npm install && npm run build
     startCommand: |
@@ -12,24 +12,22 @@ services:
         value: mongodb://splittify-mongo:27017/splittify
       - key: JWT_SECRET_KEY
         value: NotAVerySecureKey
-    mounts:
-      - type: volume
-        name: mongo-data
-        path: /data/db
-    regions: oregon  # Puoi cambiare la regione se necessario
     autoDeploy: true
+    regions: oregon  # Cambia la regione se necessario
 
   - name: splittify-mongo
-    type: database
-    plan: free  # Puoi cambiare il piano se necessario
-    image: mongo:6
-    command: mongod --bind_ip_all
+    type: web
+    plan: free  # Cambia il piano se necessario
+    env: docker
+    dockerfilePath: ./Dockerfile.mongo
+    ports:
+      - port: 27017
     mounts:
       - type: volume
         name: mongo-data
         path: /data/db
-    regions: oregon  # Puoi cambiare la regione se necessario
     autoDeploy: true
+    regions: oregon  # Cambia la regione se necessario
 
 volumes:
   - name: mongo-data
